@@ -9,6 +9,7 @@ import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Editor from 'primevue/editor';
 import Dropdown from 'primevue/dropdown';
+import axios from "axios";
 
 const app = createApp(App);
 app.use(PrimeVue);
