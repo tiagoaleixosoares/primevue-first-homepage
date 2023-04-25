@@ -25,7 +25,9 @@
   </div>
   </template>
 
-<script setup>
+
+<script>
+
 import { ref } from "vue";
 
 const selectedCountry = ref();
@@ -41,9 +43,6 @@ const countries = ref([
     { name: 'Spain', code: 'ES' },
     { name: 'United States', code: 'US' }
 ]);
-</script>
-
-<script>
 import axios from "axios";
 
 
