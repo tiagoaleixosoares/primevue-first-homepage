@@ -4,22 +4,45 @@
   <Botao-temp label="pi pi-check Ola"/>
   <RichTextEditor v-model="value" editorStyle="height: 320px" />
   
-  <DropdownTemp v-model="selectedCity" :options="cities" optionLabel="name" placeholder="Select a City" class="w-full md:w-14rem" @change="onChangeCountry">
-    <option value="">Select a Country</option>
-        <option
-          v-for="(country, index) in listCountry"
-          :value="country.country_name"
-          :key="index"
-        >
-          {{ country.country_name }}
-        </option>
+  <DropdownTemp v-model="selectedCountry" :options="countries" optionLabel="name" placeholder="Select a Country" class="w-full md:w-14rem">
+    <template #value="slotProps">
+                <div v-if="slotProps.value" class="flex align-items-center">
+                    <img :alt="slotProps.value.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`" style="width: 18px" />
+                    <div>{{ slotProps.value.name }}</div>
+                </div>
+                <span v-else>
+                    {{ slotProps.placeholder }}
+                </span>
+            </template>
+            <template #option="slotProps">
+                <div class="flex align-items-center">
+                    <img :alt="slotProps.option.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`" style="width: 18px" />
+                    <div>{{ slotProps.option.name }}</div>
+                </div>
+            </template>
   </DropdownTemp>
   
   </div>
   </template>
   
-  <script>
-  import axios from "axios";
+<script>
+import axios from "axios";
+import { ref } from "vue";
+
+const selectedCountry = ref();
+const countries = ref([
+    { name: 'Australia', code: 'AU' },
+    { name: 'Brazil', code: 'BR' },
+    { name: 'China', code: 'CN' },
+    { name: 'Egypt', code: 'EG' },
+    { name: 'France', code: 'FR' },
+    { name: 'Germany', code: 'DE' },
+    { name: 'India', code: 'IN' },
+    { name: 'Japan', code: 'JP' },
+    { name: 'Spain', code: 'ES' },
+    { name: 'United States', code: 'US' }
+]);
+
   export default {
   name: "App",
   data() {
