@@ -1,10 +1,13 @@
 <template>
   <div>
-  <InputText />
-  <Botao-temp label="pi pi-check Ola"/>
-  <RichTextEditor v-model="value" editorStyle="height: 320px" />
-  
-  <DropdownTemp v-model="selectedCountry" :options="countries" optionLabel="name" placeholder="Select a Country" class="w-full md:w-14rem">
+
+    <form @submit.prevent="sendWord">
+      <InputText type="text" v-model="text"/>
+      <Botao-temp class="p-ml-3" type="submit" label="Submit"/>
+      <RichTextEditor v-model="value" editorStyle="height: 320px" />
+    </form>
+
+  <DropdownTemp v-model="selectedCity" :options="listUsers" optionLabel="name" placeholder="Select a Country" class="w-full md:w-14rem">
     <template #value="slotProps">
                 <div v-if="slotProps.value" class="flex align-items-center">
                     <img :alt="slotProps.value.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`" style="width: 18px" />
@@ -22,6 +25,13 @@
             </template>
   </DropdownTemp>
   
+
+
+
+  <div v-for="post in listUsers" :key="post.id">
+    <h2>{{ post.username }}</h2>
+  </div>
+
   </div>
   </template>
 
@@ -29,83 +39,56 @@
 <script>
 
 import axios from "axios";
+//import { ProductService } from '@/service/ProductService';
 
 
   export default {
   name: "App",
   data() {
     return {
-      listCountry: [],
-      listState: [],
-      listCities: [],
-      selectedCountry: "",
-      selectedState: "",
+      listUsers: [],
       selectedCity: "",
-      authToken: "",
+      text: null,
+      value: null
     };
   },
-  created() {
-    this.generateAccessToken();
-  },
   methods: {
-    generateAccessToken() {
-      axios
-        .get("https://www.universal-tutorial.com/api/getaccesstoken", {
-          headers: {
-            Accept: "application/json",
-            "api-token":
-              "jAJuES2nNREYu0qOJ9Sy6bydr_LPxmjv0jUAR-oEuXozRP_CjqPqRgp1mCPaNh8VPZo",
-            "user-email": "itjebasuthan@gmail.com",
-          },
-        })
-        .then((res) => {
-          this.authToken = res.data.auth_token;
-          this.loadCountry();
-        });
-    },
-    loadCountry() {
-      axios
-        .get("https://www.universal-tutorial.com/api/countries", {
-          headers: {
-            Authorization: `Bearer ${this.authToken}`,
-            Accept: "application/json",
-          },
-        })
-        .then((res) => {
-          this.listCountry = res.data;
-        });
-    },
-    onChangeCountry() {
-      axios
-        .get(
-          `https://www.universal-tutorial.com/api/states/${this.selectedCountry}`,
-          {
-            headers: {
-              Authorization: `Bearer ${this.authToken}`,
-              Accept: "application/json",
-            },
-          }
-        )
-        .then((res) => {
-          this.listState = res.data;
-        });
-    },
-    onChangeState() {
-      axios
-        .get(
-          `https://www.universal-tutorial.com/api/cities/${this.selectedState}`,
-          {
-            headers: {
-              Authorization: `Bearer ${this.authToken}`,
-              Accept: "application/json",
-            },
-          }
-        )
-        .then((res) => {
-          this.listCities = res.data;
-        });
-    },
+    sendWord() {
+      console.log(this.value)
+      this.getDefinition(this.value)
+      //this.$toast.add({severity: 'info', summary: 'Hello' + this.text})
+    }, 
+    getDefinition(word) {
+      this.data = null
+      axios.post('https://webhook.site/f5b3da0b-ce83-46f5-a79d-372895f51a5c',
+        { "value": word},{
+        headers: {
+          'x-rapidapi-key': "ola mundo Header",
+          'x-rapidapi-host': "outro header",
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Expose-Headers': '*',
+          'Content-Type' : 'application/json'
+        }
+      }
+      )
+    }
   },
+  mounted() {
+    //ProductService.getProductsMini().then((data) => (products.value = data));
+    axios
+      .get('https://jsonplaceholder.typicode.com/users')
+      .then((response) => {
+        this.listUsers = response.data
+        //console.log (this.listUsers)
+      }
+
+      )
+  },
+  
+  created() {
+    
+  }
 };
 </script>
   
